@@ -65,9 +65,7 @@ let package = Package(
             name: "KarteCore", url: "https://sdk.karte.io/ios/swiftpm/Core-2.31.0/KarteCore.xcframework.zip", checksum: "27601a067657a566ed3a73d508480ffd2645e118b730f4ccf502d31cb2cd92bf"
         ),
         .binaryTarget(
-          name: "KarteInAppMessaging",
-          url: "https://raw.githubusercontent.com/letienndat/xcframework/main/KarteInAppMessaging.xcframework.zip",
-          checksum: "435d9b6ee6203a5c287a28f32a3bce043ee274471d96bfdc0778a0daa981cf5a"
+                    name: "KarteInAppMessaging", url: "https://sdk.karte.io/ios/swiftpm/InAppMessaging-2.20.0/KarteInAppMessaging.xcframework.zip", checksum: "6b0dee2f2bd2a110bc137724788ec5bf47681f2f4d09ab0a3589c68f41415c0d"
         ),
         .binaryTarget(
             name: "KarteVariables", url: "https://sdk.karte.io/ios/swiftpm/Variables-2.12.0/KarteVariables.xcframework.zip", checksum: "742912209afab7bcad05e6689723656be139c99faa34ee2734c1c1b3c38797ac"
