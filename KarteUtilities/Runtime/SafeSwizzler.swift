@@ -109,10 +109,10 @@ public extension SafeSwizzler {
                 return
             }
 
-//            let originalImp = method_setImplementation(method, imp)
-//            if originalImp != imp {
-//                putImplementationPair(Pair(original: originalImp, custom: imp), forSignature: signature)
-//            }
+            let originalImp = method_setImplementation(method, imp)
+            if originalImp != imp {
+                putImplementationPair(Pair(original: originalImp, custom: imp), forSignature: signature)
+            }
         }
 
         private func unswizzle(forSignature signature: Signature) {

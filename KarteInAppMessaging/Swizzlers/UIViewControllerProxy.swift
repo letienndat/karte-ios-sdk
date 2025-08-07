@@ -42,26 +42,26 @@ internal class UIViewControllerProxy: NSObject {
     }
 
     func swizzleMethods() {
-        let presentViewControllerBlock: @convention(block) (Any, UIViewController, Bool, (() -> Void)?) -> Void = presentViewController
-        scope.swizzle(
-            cls: cls,
-            name: presentViewControllerSelector,
-            imp: imp_implementationWithBlock(presentViewControllerBlock)
-        )
-
-        let dismissViewControllerBlock: @convention(block) (Any, Bool, (() -> Void)?) -> Void = dismissViewController
-        scope.swizzle(
-            cls: cls,
-            name: dismissViewControllerSelector,
-            imp: imp_implementationWithBlock(dismissViewControllerBlock)
-        )
-
-        let viewDidAppearBlock: @convention(block) (Any, Bool) -> Void = viewDidAppear
-        scope.swizzle(
-            cls: cls,
-            name: viewDidAppearSelector,
-            imp: imp_implementationWithBlock(viewDidAppearBlock)
-        )
+//        let presentViewControllerBlock: @convention(block) (Any, UIViewController, Bool, (() -> Void)?) -> Void = presentViewController
+//        scope.swizzle(
+//            cls: cls,
+//            name: presentViewControllerSelector,
+//            imp: imp_implementationWithBlock(presentViewControllerBlock)
+//        )
+//
+//        let dismissViewControllerBlock: @convention(block) (Any, Bool, (() -> Void)?) -> Void = dismissViewController
+//        scope.swizzle(
+//            cls: cls,
+//            name: dismissViewControllerSelector,
+//            imp: imp_implementationWithBlock(dismissViewControllerBlock)
+//        )
+//
+//        let viewDidAppearBlock: @convention(block) (Any, Bool) -> Void = viewDidAppear
+//        scope.swizzle(
+//            cls: cls,
+//            name: viewDidAppearSelector,
+//            imp: imp_implementationWithBlock(viewDidAppearBlock)
+//        )
 
         Logger.debug(tag: .inAppMessaging, message: "\(className) executed method swizzling.")
     }
@@ -74,77 +74,77 @@ internal class UIViewControllerProxy: NSObject {
 
 extension UIViewControllerProxy {
 
-    func presentViewController(receiver: Any, viewController: UIViewController, animated: Bool, completion: (() -> Void)?) {
-        Logger.debug(tag: .inAppMessaging, message: "Invoked \(className).\(#function)")
-
-        guard let receiver = receiver as? UIViewController else {
-            return
-        }
-
-        let window = receiver.view.window
-        let process = InAppMessaging.shared.retrieveProcess(window: window)
-        process?.presentViewController(viewController, in: window)
-
-        let originalImplementation = scope.originalImplementation(
-            cls: cls,
-            name: presentViewControllerSelector
-        )
-        let originalFunction = unsafeBitCast(
-            originalImplementation,
-            to: (@convention(c) (Any, Selector, UIViewController, Bool, (() -> Void)?) -> Void).self
-        )
-        originalFunction(receiver, presentViewControllerSelector, viewController, animated, completion)
-    }
-
-    func dismissViewController(receiver: Any, animated: Bool, completion: (() -> Void)?) {
-        Logger.debug(tag: .inAppMessaging, message: "Invoked \(className).\(#function)")
-
-        guard let receiver = receiver as? UIViewController else {
-            return
-        }
-
-        var viewController = receiver
-        while let tempViewController = viewController.presentedViewController {
-            viewController = tempViewController
-        }
-
-        let window = receiver.view.window
-        let process = InAppMessaging.shared.retrieveProcess(window: window)
-        process?.dismissViewController(viewController, in: window)
-
-        let originalImplementation = scope.originalImplementation(
-            cls: cls,
-            name: dismissViewControllerSelector
-        )
-        let originalFunction = unsafeBitCast(
-            originalImplementation,
-            to: (@convention(c) (Any, Selector, Bool, (() -> Void)?) -> Void).self
-        )
-        originalFunction(receiver, dismissViewControllerSelector, animated, completion)
-    }
-
-    func viewDidAppear(receiver: Any, animated: Bool) {
-        Logger.debug(tag: .inAppMessaging, message: "Invoked \(className).\(#function)")
-
-        guard let receiver = receiver as? UIViewController else {
-            return
-        }
-
-        let originalImplementation = scope.originalImplementation(
-            cls: cls,
-            name: viewDidAppearSelector
-        )
-        let originalFunction = unsafeBitCast(
-            originalImplementation,
-            to: (@convention(c) (Any, Selector, Bool) -> Void).self
-        )
-        originalFunction(receiver, viewDidAppearSelector, animated)
-
-        guard let window = receiver.view?.window else {
-            Logger.warn(tag: .inAppMessaging, message: "The view is nil and the window not found")
-            return
-        }
-        let process = InAppMessaging.shared.retrieveProcess(window: window)
-        process?.viewDidAppearFromViewController(receiver)
-    }
+//    func presentViewController(receiver: Any, viewController: UIViewController, animated: Bool, completion: (() -> Void)?) {
+//        Logger.debug(tag: .inAppMessaging, message: "Invoked \(className).\(#function)")
+//
+//        guard let receiver = receiver as? UIViewController else {
+//            return
+//        }
+//
+//        let window = receiver.view.window
+//        let process = InAppMessaging.shared.retrieveProcess(window: window)
+//        process?.presentViewController(viewController, in: window)
+//
+//        let originalImplementation = scope.originalImplementation(
+//            cls: cls,
+//            name: presentViewControllerSelector
+//        )
+//        let originalFunction = unsafeBitCast(
+//            originalImplementation,
+//            to: (@convention(c) (Any, Selector, UIViewController, Bool, (() -> Void)?) -> Void).self
+//        )
+//        originalFunction(receiver, presentViewControllerSelector, viewController, animated, completion)
+//    }
+//
+//    func dismissViewController(receiver: Any, animated: Bool, completion: (() -> Void)?) {
+//        Logger.debug(tag: .inAppMessaging, message: "Invoked \(className).\(#function)")
+//
+//        guard let receiver = receiver as? UIViewController else {
+//            return
+//        }
+//
+//        var viewController = receiver
+//        while let tempViewController = viewController.presentedViewController {
+//            viewController = tempViewController
+//        }
+//
+//        let window = receiver.view.window
+//        let process = InAppMessaging.shared.retrieveProcess(window: window)
+//        process?.dismissViewController(viewController, in: window)
+//
+//        let originalImplementation = scope.originalImplementation(
+//            cls: cls,
+//            name: dismissViewControllerSelector
+//        )
+//        let originalFunction = unsafeBitCast(
+//            originalImplementation,
+//            to: (@convention(c) (Any, Selector, Bool, (() -> Void)?) -> Void).self
+//        )
+//        originalFunction(receiver, dismissViewControllerSelector, animated, completion)
+//    }
+//
+//    func viewDidAppear(receiver: Any, animated: Bool) {
+//        Logger.debug(tag: .inAppMessaging, message: "Invoked \(className).\(#function)")
+//
+//        guard let receiver = receiver as? UIViewController else {
+//            return
+//        }
+//
+//        let originalImplementation = scope.originalImplementation(
+//            cls: cls,
+//            name: viewDidAppearSelector
+//        )
+//        let originalFunction = unsafeBitCast(
+//            originalImplementation,
+//            to: (@convention(c) (Any, Selector, Bool) -> Void).self
+//        )
+//        originalFunction(receiver, viewDidAppearSelector, animated)
+//
+//        guard let window = receiver.view?.window else {
+//            Logger.warn(tag: .inAppMessaging, message: "The view is nil and the window not found")
+//            return
+//        }
+//        let process = InAppMessaging.shared.retrieveProcess(window: window)
+//        process?.viewDidAppearFromViewController(receiver)
+//    }
 }
